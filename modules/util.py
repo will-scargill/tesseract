@@ -1,5 +1,5 @@
 from werkzeug.exceptions import BadRequestKeyError
-from main import publiclinks
+from models.publiclinks import publiclinks
 import random, string
 
 def verifyRequestData(request, data):

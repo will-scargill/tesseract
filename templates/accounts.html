@@ -40,14 +40,14 @@
 	<h3> Account Creation</h3>
 	<br>
 	<form action="/admin/accounts" method="post" enctype="multipart/form-data">
-		<div class="form-group">
-		    <input type="text" name="username" placeholder="username"/>
+		<div class="form-group w-25 container-fluid text-center">
+		    <input type="text" class="form-control" name="username" placeholder="username"/>
 		    <br>
 		    <br>
-		    <input type="password" name="password" placeholder="password"/>
+		    <input type="password" class="form-control" name="password" placeholder="password"/>
 	  	</div>
 		<div class="form-group">
-	   		<input type="submit" value="submit" />
+	   		<input type="submit" class="btn btn-primary" value="submit" />
   		</div>
 	</form>
 	{% with messages = get_flashed_messages(with_categories=true) %}

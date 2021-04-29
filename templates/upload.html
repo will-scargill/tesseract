@@ -5,10 +5,11 @@
 {% block content %}
 <br>
 <form action="/upload" method="post" enctype="multipart/form-data">
-	<div class="form-group">
-	    <input style="text-align-last: center;" type="file" name="inputFile"/>
+
+	<div class="form-group container-fluid text-center">
+	    <input class="form-control-file" style="text-align-last: center;" type="file" name="inputFile"/>
   	</div>
-  	<div class="form-group">
+  	<div class="form-group w-25 container-fluid text-center">
   		<!--
 	    <label><input id="chkEncrypted" type="checkbox" name="flagEncrypted" text="asda"/> Encrypt File </label>
 	    <div id="encryptedDisplay"  style="display: none;" >	    	
@@ -17,31 +18,31 @@
 	    </div>
 	    <br>
 		-->
-	    <label><input id="chkGlobal" type="checkbox" name="flagGlobal" text="asda"/> Global File </label>
-	    <div id="globalDisplay"  style="display: none;" >	    	
-	    	<input type="text" name="globalAddresses" placeholder="addresses" /> 
+	    <label><input id="chkGlobal" class="form-check-input" type="checkbox" name="flagGlobal" text="asda"/> Global File </label>
+	    <div id="globalDisplay" style="display: none;" >	    	
+	    	<input type="text" class="form-control" name="globalAddresses" placeholder="addresses" /> 
 	    	<small id="keywordHelp" class="form-text text-muted">Seperate addresses by space</small>
 	    </div>
 	    <br>
-	    <label><input id="chkShared" type="checkbox" name="flagShared" text="asda"/> Shared File </label>
+	    <label><input id="chkShared" class="form-check-input" type="checkbox" name="flagShared" text="asda"/> Shared File </label>
 	    <div id="sharedDisplay"  style="display: none;" >	    	
-	    	<input type="text" name="sharedUsers" placeholder="users" /> 
+	    	<input type="text" class="form-control" name="sharedUsers" placeholder="users" /> 
 	    	<small id="keywordHelp" class="form-text text-muted">Seperate users by space</small>
 	    </div>
 	    <br>
-	    <label><input id="chkRestricted" type="checkbox" name="flagRestricted" text="asda"/> Restricted File </label>
+	    <label><input id="chkRestricted" class="form-check-input" type="checkbox" name="flagRestricted" text="asda"/> Restricted File </label>
 	    <div id="restrictedDisplay"  style="display: none;" >	    	
-	    	<input type="text" name="allowedIPs" placeholder="ips" /> 
+	    	<input type="text" class="form-control" name="allowedIPs" placeholder="ips" /> 
 	    	<small id="keywordHelp" class="form-text text-muted">Seperate addresses by space</small>
 	    	<br>
 	    </div>
   	</div>
-  	<div class="form-group">
-	    <input type="text" name="keywords" placeholder="keywords"/>
+  	<div class="form-group w-25 container-fluid text-center">
+	    <input type="text" class="form-control" name="keywords" placeholder="keywords"/>
 	    <small id="keywordHelp" class="form-text text-muted">Seperate keywords by space</small>
   	</div>
   	<div class="form-group">
-	   <input type="submit" value="submit" />
+	   <input type="submit" class="btn btn-primary" value="submit" />
   	</div>
 </form>
 {% with messages = get_flashed_messages(with_categories=true) %}
