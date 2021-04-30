@@ -14,6 +14,7 @@ from db import db
 
 from views.misc import misc
 from views.uploads import uploads
+from views.admin import admin
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -23,10 +24,10 @@ app.permanent_session_lifetime = timedelta(minutes=2)
 
 app.register_blueprint(misc)
 app.register_blueprint(uploads)
+app.register_blueprint(admin)
 
-ph = PasswordHasher()
+uploads_dir = os.path.join(os.path.join(os.getcwd(), "instance"), 'uploads')
 
-uploads_dir = os.path.join(app.instance_path, 'uploads')
 os.makedirs(uploads_dir, exist_ok=True)
 
 if __name__ == "__main__":

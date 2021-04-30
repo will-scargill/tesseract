@@ -1,6 +1,23 @@
+from flask import Blueprint, redirect, url_for, render_template, request, session, flash, send_file, jsonify, send_from_directory
+from flask_sqlalchemy import SQLAlchemy
+from argon2 import PasswordHasher
+import os
+import datetime
+import json
 
+from modules import util
 
-@app.route("/admin/accounts", methods=["GET", "POST"])
+from models.users import users
+from models.files import files
+from models.publiclinks import publiclinks
+
+from db import db
+
+ph = PasswordHasher()
+
+admin = Blueprint("admin", __name__)
+
+@admin.route("/admin/accounts", methods=["GET", "POST"])
 def adminAccounts():
 	if "user" in session:
 		if request.method == "POST":
@@ -32,9 +49,9 @@ def adminAccounts():
 				flash("You are not authorised", "warning")
 				return render_template("index.html", username=session["user"]),403
 	else:
-		return redirect(url_for("login"))
+		return redirect(url_for("misc.login"))
 
-@app.route("/admin/network", methods=["GET"])
+@admin.route("/admin/network", methods=["GET"])
 def adminNetwork():
 	if "user" in session:
 		found_users = users.query.filter_by(name=session["user"]).first()
@@ -45,9 +62,9 @@ def adminNetwork():
 			flash("You are not authorised", "warning")
 			return render_template("index.html", username=session["user"]),403
 	else:
-		return redirect(url_for("login"))
+		return redirect(url_for("misc.login"))
 
-@app.route("/admin/logs", methods=["GET"])
+@admin.route("/admin/logs", methods=["GET"])
 def adminLogs():
 	if "user" in session:
 		found_users = users.query.filter_by(name=session["user"]).first()
@@ -58,9 +75,9 @@ def adminLogs():
 			flash("You are not authorised", "warning")
 			return render_template("index.html", username=session["user"]),403
 	else:
-		return redirect(url_for("login"))
+		return redirect(url_for("misc.login"))
 
-@app.route("/admin/accounts/toggle/<userid>", methods=["GET"])
+@admin.route("/admin/accounts/toggle/<userid>", methods=["GET"])
 def toggleAdmin(userid):
 	if "user" in session:
 		found_users = users.query.filter_by(name=session["user"]).first()
@@ -84,9 +101,9 @@ def toggleAdmin(userid):
 			flash("You are not authorised", "warning")
 			return render_template("index.html", username=session["user"]),403	
 	else:
-		return redirect(url_for("login"))
+		return redirect(url_for("misc.login"))
 
-@app.route("/admin/accounts/delete/<userid>", methods=["GET"])
+@admin.route("/admin/accounts/delete/<userid>", methods=["GET"])
 def deleteUser(userid):
 	if "user" in session:
 		found_users = users.query.filter_by(name=session["user"]).first()
@@ -107,4 +124,4 @@ def deleteUser(userid):
 			flash("You are not authorised", "warning")
 			return render_template("index.html", username=session["user"]),403	
 	else:
-		return redirect(url_for("login"))
+		return redirect(url_for("misc.login"))

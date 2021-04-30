@@ -9,6 +9,7 @@ import json
 
 from modules import auth
 from modules import util
+from db import db
 
 from models.users import users
 from models.files import files
@@ -16,7 +17,7 @@ from models.publiclinks import publiclinks
 
 uploads = Blueprint("uploads", __name__)
 
-uploads_dir = os.path.join(current_app.instance_path, 'uploads')
+uploads_dir = os.path.join(os.path.join(os.getcwd(), "instance"), 'uploads')
 
 @uploads.route("/upload", methods=["POST", "GET"])
 def upload():
@@ -61,7 +62,7 @@ def upload():
 					uploadSuccessful = False
 
 			if uploadSuccessful == False:
-				return redirect(url_for("upload"))
+				return redirect(url_for("uploads.upload"))
 
 			userUploadDir = os.path.join(uploads_dir, session["user"])
 
@@ -82,7 +83,7 @@ def upload():
 			db.session.commit()
 
 			flash("File uploaded successfully", "info")
-			return redirect(url_for("upload"))
+			return redirect(url_for("uploads.upload"))
 		else:
 			return render_template("upload.html")
 	else:
@@ -106,15 +107,19 @@ def download(fileid):
 		fileToDown = files.query.filter_by(_id=fileid).first()
 		if fileToDown == None:
 			flash("File does not exist", "danger")
-			return redirect(url_for("allfiles"))
+			return redirect(url_for("uploads.allfiles"))
 		if fileToDown.restricted:
 			ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)  
 			allowedIPs = fileToDown.allowedIPs.split()
 			if ip in allowedIPs:
-				return send_file(fileToDown.path, as_attachment=True)
+				try:
+					return send_file(fileToDown.path, as_attachment=True)		
+				except FileNotFoundError:
+					flash("File no longer exists", "warning")
+					return render_template("notfound.html")
 			else:
 				flash("You are not authorised", "warning")
-				return redirect(url_for("allfiles"))
+				return redirect(url_for("uploads.allfiles"))
 		else:
 			try:
 				return send_file(fileToDown.path, as_attachment=True)		
@@ -131,10 +136,13 @@ def delete(fileid):
 		if fileToDel == None:
 			flash("File does not exist", "danger")
 		else:
-			os.remove(fileToDel.path)
+			try:
+				os.remove(fileToDel.path)
+			except FileNotFoundError:
+				pass
 			fileToDel = files.query.filter_by(_id=fileid).delete()
 			db.session.commit()
-		return redirect(url_for("allfiles"))
+		return redirect(url_for("uploads.allfiles"))
 	else:
 		return redirect(url_for("misc.login"))
 
@@ -148,7 +156,7 @@ def unshare(fileid):
 			newSharedString = (fileToDel.sharedUsers.replace(session["user"], "")).strip()
 			fileToDel.sharedUsers = newSharedString
 			db.session.commit()
-		return redirect(url_for("allfiles"))
+		return redirect(url_for("uploads.allfiles"))
 	else:
 		return redirect(url_for("misc.login"))
 
@@ -158,7 +166,7 @@ def getlink(fileid):
 		existingLink = publiclinks.query.filter_by(fileid=fileid).first()
 		if existingLink:
 			flash("Link already exists at public/" + existingLink.identifier, "warning")
-			return redirect(url_for("allfiles"))
+			return redirect(url_for("uploads.allfiles"))
 
 		linkIden = util.getNewIdentifier(db)
 		fileToLink = files.query.filter_by(_id=fileid).first()
@@ -167,6 +175,6 @@ def getlink(fileid):
 		db.session.commit()
 
 		flash("Link created at public/" + linkIden, "info")
-		return redirect(url_for("allfiles"))
+		return redirect(url_for("uploads.allfiles"))
 	else:
 		return redirect(url_for("misc.login"))

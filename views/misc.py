@@ -9,6 +9,8 @@ from modules import auth
 from modules import util
 
 from models.users import users
+from models.files import files
+from models.publiclinks import publiclinks
 
 misc = Blueprint("misc", __name__)
 
