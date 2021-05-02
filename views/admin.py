@@ -51,6 +51,21 @@ def adminAccounts():
 	else:
 		return redirect(url_for("misc.login"))
 
+@admin.route("/admin/links", methods=["GET"])
+def adminLinks():
+	if "user" in session:
+		found_users = users.query.filter_by(name=session["user"]).first()
+		if found_users.admin == True:
+
+			allLinks = publiclinks.query.all()
+
+			return render_template("links.html", allLinks=allLinks)
+		else:
+			flash("You are not authorised", "warning")
+			return render_template("index.html", username=session["user"]),403
+	else:
+		return redirect(url_for("misc.login"))
+
 @admin.route("/admin/network", methods=["GET"])
 def adminNetwork():
 	if "user" in session:
@@ -120,6 +135,27 @@ def deleteUser(userid):
 			allUsers = users.query.all()
 
 			return render_template("accounts.html", allUsers=allUsers)
+		else:
+			flash("You are not authorised", "warning")
+			return render_template("index.html", username=session["user"]),403	
+	else:
+		return redirect(url_for("misc.login"))
+
+@admin.route("/admin/links/delete/<linkid>", methods=["GET"])
+def deleteLink(linkid):
+	if "user" in session:
+		found_users = users.query.filter_by(name=session["user"]).first()
+		if found_users.admin == True:
+			foundLink = publiclinks.query.filter_by(_id=linkid).first()
+			if foundLink == None:
+				flash("Link not found", "danger")
+			else:
+				publiclinks.query.filter_by(_id=linkid).delete()
+				db.session.commit()
+
+			allLinks = publiclinks.query.all()
+
+			return render_template("links.html", allLinks=allLinks)
 		else:
 			flash("You are not authorised", "warning")
 			return render_template("index.html", username=session["user"]),403	
