@@ -6,15 +6,21 @@ from argon2 import PasswordHasher
 import os
 import datetime
 import json
+import random
+import string
 
 from modules import auth
 from modules import util
 
-from db import db
-
 from views.misc import misc
 from views.uploads import uploads
 from views.admin import admin
+
+from db import db
+
+from models.users import users
+from models.files import files
+from models.publiclinks import publiclinks
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
@@ -32,4 +38,7 @@ os.makedirs(uploads_dir, exist_ok=True)
 
 if __name__ == "__main__":
 	db.init_app(app)
+	with app.app_context():
+		db.create_all()
+	
 	app.run(debug=True)

@@ -11,6 +11,8 @@
 		  	<thead>
 		    	<tr>
 		      		<th scope="col">Link</th>
+					<th scope="col">Filename</th>
+					<th scope="col">Creator</th>
 		      		<th scope="col">Options</th>
 		    	</tr>
 		  	</thead>
@@ -19,6 +21,8 @@
 					{% for link in allLinks %}
 						<tr>
 				      		<td>{{link.identifier}}</td>
+							<td>{{link.filename}}</td>
+							<td>{{link.creator}}</td>
 				      		<td>
 				      				<a href="/admin/links/delete/{{link._id}}" class="btn btn-primary" role="button" aria-pressed="true">Delete link</a>
 				      		</td>

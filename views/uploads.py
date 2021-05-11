@@ -170,7 +170,7 @@ def getlink(fileid):
 
 		linkIden = util.getNewIdentifier(db)
 		fileToLink = files.query.filter_by(_id=fileid).first()
-		linkObj = publiclinks(fileid, linkIden)
+		linkObj = publiclinks(fileid, fileToLink.filename, session["user"], linkIden)
 		db.session.add(linkObj)
 		db.session.commit()
 

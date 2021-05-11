@@ -4,6 +4,8 @@ from argon2 import PasswordHasher
 import os
 import datetime
 import json
+import random
+import string
 
 from modules import auth
 from modules import util
@@ -11,6 +13,9 @@ from modules import util
 from models.users import users
 from models.files import files
 from models.publiclinks import publiclinks
+from db import db
+
+ph = PasswordHasher()
 
 misc = Blueprint("misc", __name__)
 
@@ -25,6 +30,8 @@ def login():
 			authed = auth.VerifyHash(found_users.password, password)
 			if authed:
 				session["user"] = user
+				if user == "admin":
+					util.newInstallCheck()
 				return redirect(url_for("misc.home"))
 			else:
 				flash("Invalid login", "warning")
@@ -67,8 +74,23 @@ def logout():
 		flash("Logged out", "info")
 	return redirect(url_for("misc.login")) 
 
-@misc.route('/favicon.ico')
-def favicon():
-    return send_from_directory(os.path.join(misc.root_path, 'static'),
-                               'favicon.ico', mimetype='image/vnd.microsoft.icon')
+@misc.route("/newinstall")
+def newinstall():
+	if os.path.isfile("instance/lock.txt"):
+		flash("Install already complete", "warning")
+		return render_template("notfound.html")
+	else:
+		exists = users.query.filter_by(name="admin").first()
+		if not exists:
+			newPass = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(16))
+			newPassHash = ph.hash(newPass)
+			newAdmin = users("admin", json.dumps(newPassHash), 1)
+			db.session.add(newAdmin)
+			db.session.commit()
+			f = open("templates/newinstall.html", "w")
+			f.write(newPass)
+			f.close()
+			return render_template("newinstall.html")
+		else:
+			return render_template("newinstall.html")
 

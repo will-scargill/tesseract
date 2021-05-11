@@ -1,6 +1,9 @@
 from werkzeug.exceptions import BadRequestKeyError
 from models.publiclinks import publiclinks
 import random, string
+import os
+
+from models.users import users
 
 def verifyRequestData(request, data):
 	try:
@@ -30,3 +33,10 @@ def getNewIdentifier(db):
 		doesNotExist = publiclinks.query.filter_by(identifier=newIden).first() is None
 		if doesNotExist:
 			return newIden
+
+def newInstallCheck():
+	if not os.path.isfile("instance/lock.txt"):
+		f = open("instance/lock.txt", "w")
+		f.write(";)")
+		f.close()
+
