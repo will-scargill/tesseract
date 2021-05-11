@@ -20,34 +20,34 @@ admin = Blueprint("admin", __name__)
 @admin.route("/admin/accounts", methods=["GET", "POST"])
 def adminAccounts():
 	if "user" in session:
-		if request.method == "POST":
-			username = request.form["username"]
-			password = request.form["password"]
-			passwordHash = ph.hash(password)
+		found_users = users.query.filter_by(name=session["user"]).first()
+		if found_users.admin == True:
+			if request.method == "POST":
+				username = request.form["username"]
+				password = request.form["password"]
+				passwordHash = ph.hash(password.strip())
 
-			allUsers = users.query.all()
-			for user in allUsers:
-				if user.name == username:
-					flash("An account with this name already exists", "warning")
-					return render_template("accounts.html", allUsers=allUsers)
+				allUsers = users.query.all()
+				for user in allUsers:
+					if user.name == username:
+						flash("An account with this name already exists", "warning")
+						return render_template("accounts.html", allUsers=allUsers)
 
-			newUser = users(username, json.dumps(passwordHash), 0)
+				newUser = users(username, json.dumps(passwordHash), 0)
 
-			db.session.add(newUser)
-			db.session.commit()
+				db.session.add(newUser)
+				db.session.commit()
 
-			allUsers = users.query.all()
-			return render_template("accounts.html", allUsers=allUsers)
-		else:
-			found_users = users.query.filter_by(name=session["user"]).first()
-			if found_users.admin == True:
-
+				allUsers = users.query.all()
+				return render_template("accounts.html", allUsers=allUsers)
+			else:
 				allUsers = users.query.all()
 
 				return render_template("accounts.html", allUsers=allUsers)
-			else:
-				flash("You are not authorised", "warning")
-				return render_template("index.html", username=session["user"]),403
+		else:
+			flash("You are not authorised", "warning")
+			ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr) 
+			return render_template("index.html", username=session["user"], ip=ip),403
 	else:
 		return redirect(url_for("misc.login"))
 
@@ -62,7 +62,8 @@ def adminLinks():
 			return render_template("links.html", allLinks=allLinks)
 		else:
 			flash("You are not authorised", "warning")
-			return render_template("index.html", username=session["user"]),403
+			ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr) 
+			return render_template("index.html", username=session["user"], ip=ip),403
 	else:
 		return redirect(url_for("misc.login"))
 
@@ -75,7 +76,8 @@ def adminNetwork():
 			return render_template("network.html")
 		else:
 			flash("You are not authorised", "warning")
-			return render_template("index.html", username=session["user"]),403
+			ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr) 
+			return render_template("index.html", username=session["user"], ip=ip),403
 	else:
 		return redirect(url_for("misc.login"))
 
@@ -88,7 +90,8 @@ def adminLogs():
 			return render_template("logs.html")
 		else:
 			flash("You are not authorised", "warning")
-			return render_template("index.html", username=session["user"]),403
+			ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr) 
+			return render_template("index.html", username=session["user"], ip=ip),403
 	else:
 		return redirect(url_for("misc.login"))
 
@@ -114,7 +117,8 @@ def toggleAdmin(userid):
 			return render_template("accounts.html", allUsers=allUsers)
 		else:
 			flash("You are not authorised", "warning")
-			return render_template("index.html", username=session["user"]),403	
+			ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr) 
+			return render_template("index.html", username=session["user"], ip=ip),403	
 	else:
 		return redirect(url_for("misc.login"))
 
@@ -137,7 +141,8 @@ def deleteUser(userid):
 			return render_template("accounts.html", allUsers=allUsers)
 		else:
 			flash("You are not authorised", "warning")
-			return render_template("index.html", username=session["user"]),403	
+			ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr) 
+			return render_template("index.html", username=session["user"], ip=ip),403	
 	else:
 		return redirect(url_for("misc.login"))
 
@@ -158,6 +163,34 @@ def deleteLink(linkid):
 			return render_template("links.html", allLinks=allLinks)
 		else:
 			flash("You are not authorised", "warning")
-			return render_template("index.html", username=session["user"]),403	
+			ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr) 
+			return render_template("index.html", username=session["user"], ip=ip),403	
+	else:
+		return redirect(url_for("misc.login"))
+
+@admin.route("/admin/accounts/change/<userid>", methods=["GET", "POST"])
+def changePassword(userid):
+	if "user" in session:		
+		found_users = users.query.filter_by(name=session["user"]).first()
+		if found_users.admin == True:
+			if request.method == "POST":
+				foundUser = users.query.filter_by(_id=userid).first()
+				newPassword = request.form["password"]
+				if newPassword != "":
+					newPassHash = ph.hash(newPassword)
+					foundUser.password = json.dumps(newPassHash)
+
+					db.session.commit()
+					flash("Password change successful", "info")
+					return redirect(url_for("admin.adminAccounts"))
+				else:
+					flash("Password is empty", "warning")
+					return render_template("change.html", userid=userid)
+			else:
+				return render_template("change.html", userid=userid)		
+		else:
+			flash("You are not authorised", "warning")
+			ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr) 
+			return render_template("index.html", username=session["user"], ip=ip),403	
 	else:
 		return redirect(url_for("misc.login"))
