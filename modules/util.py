@@ -10,7 +10,7 @@ from models.publiclinks import publiclinks
 def verifyRequestData(request, data):
     """ Check if request data exists """
     try:
-        existCheck = request.form[data] # pylint: disable=W0612 # Only created to see if possible
+        existCheck = request.form[data]  # pylint: disable=W0612 # Only created to see if possible
         returnData = True
     except BadRequestKeyError:
         returnData = False

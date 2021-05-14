@@ -71,7 +71,7 @@ def adminNetwork():
     """ Placeholder """
     if "user" in session:
         found_users = users.query.filter_by(name=session["user"]).first()
-        if found_users.admin is True and False: # pylint: disable=R1727 # Temporarily disabled
+        if found_users.admin is True and False:  # pylint: disable=R1727 # Temporarily disabled
 
             return render_template("network.html")
         else:
