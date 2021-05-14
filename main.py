@@ -22,6 +22,7 @@ app.register_blueprint(admin)
 uploads_dir = os.path.join(os.getcwd(), "uploads")
 
 os.makedirs(uploads_dir, exist_ok=True)
+os.makedirs(app.instance_path, exist_ok=True)
 
 if __name__ == "__main__":
     db.init_app(app)
