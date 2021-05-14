@@ -19,7 +19,7 @@ app.register_blueprint(misc)
 app.register_blueprint(uploads)
 app.register_blueprint(admin)
 
-uploads_dir = os.path.join(os.path.join(os.getcwd(), "instance"), 'uploads')
+uploads_dir = os.path.join(os.getcwd(), "uploads")
 
 os.makedirs(uploads_dir, exist_ok=True)
 

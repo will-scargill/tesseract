@@ -12,7 +12,7 @@ from models.publiclinks import publiclinks
 
 uploads = Blueprint("uploads", __name__)
 
-uploads_dir = os.path.join(os.path.join(os.getcwd(), "instance"), 'uploads')
+uploads_dir = os.path.join(os.getcwd(), "uploads")
 
 
 @uploads.route("/upload", methods=["POST", "GET"])
