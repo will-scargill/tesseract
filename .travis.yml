@@ -2,5 +2,5 @@ language: python
 install:
   - pip install -r requirements.txt
 script:
-  - pycodestyle --ignore=E501
-  - pylint --disable="R1705,C0301,C0103,E1103,R0912,R0911,R0902,R0913,R0903"
+  - pycodestyle --ignore=E501 .
+  - pylint --disable="R1705,C0301,C0103,E1103,R0912,R0911,R0902,R0913,R0903" tesseract
