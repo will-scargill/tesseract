@@ -3,13 +3,13 @@ import os
 
 from flask import Flask
 
-from tesseract.models import files
-from tesseract.models import publiclinks
-from tesseract.models import users
+from app.models import files
+from app.models import publiclinks
+from app.models import users
 
-from tesseract.routes import misc
-from tesseract.routes import admin
-from tesseract.routes import uploads
+from app.routes import misc
+from app.routes import admin
+from app.routes import uploads
 
 from .db import db
 

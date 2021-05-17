@@ -3,12 +3,12 @@ import os
 from flask import Blueprint, redirect, url_for, render_template, request, session, flash, send_file
 from werkzeug.utils import secure_filename
 
-from tesseract.modules import util
+from app.modules import util
 
-from tesseract.db import db
+from app.db import db
 
-from tesseract.models import files
-from tesseract.models import publiclinks
+from app.models import files
+from app.models import publiclinks
 
 bp = Blueprint("uploads", __name__)
 

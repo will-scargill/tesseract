@@ -1,2 +1,2 @@
 """ thing for docker """
-from tesseract import app
+from app import app

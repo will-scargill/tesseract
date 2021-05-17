@@ -4,7 +4,7 @@ import string
 import os
 from werkzeug.exceptions import BadRequestKeyError
 
-from tesseract.models import publiclinks
+from app.models import publiclinks
 
 
 def verifyRequestData(request, data):

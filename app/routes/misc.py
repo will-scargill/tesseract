@@ -6,14 +6,14 @@ import string
 from flask import Blueprint, redirect, url_for, render_template, request, session, flash, send_file
 from argon2 import PasswordHasher
 
-from tesseract.modules import auth
-from tesseract.modules import util
+from app.modules import auth
+from app.modules import util
 
-from tesseract.models import users
-from tesseract.models import files
-from tesseract.models import publiclinks
+from app.models import users
+from app.models import files
+from app.models import publiclinks
 
-from tesseract.db import db
+from app.db import db
 
 ph = PasswordHasher()
 
