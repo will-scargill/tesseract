@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Tesseract Gateway{% endblock %}
+
+{% block content %}
+	<br>
+	<h3> All Public Links</h3>
+	<br>
+	<div class="container-fluid text-center">
+		<table id="filestable" class="table">
+		  	<thead>
+		    	<tr>
+		      		<th scope="col">Link</th>
+					<th scope="col">Filename</th>
+					<th scope="col">Creator</th>
+		      		<th scope="col">Options</th>
+		    	</tr>
+		  	</thead>
+		  	<tbody>
+		  		{% if allLinks %}
+					{% for link in allLinks %}
+						<tr>
+				      		<td>{{link.identifier}}</td>
+							<td>{{link.filename}}</td>
+							<td>{{link.creator}}</td>
+				      		<td>
+				      				<a href="/admin/links/delete/{{link._id}}" class="btn btn-primary" role="button" aria-pressed="true">Delete link</a>
+				      		</td>
+				    	</tr>
+					{% endfor %}
+				{% endif %}
+		  	</tbody>
+		</table>
+	</div>
+	
+	{% with messages = get_flashed_messages(with_categories=true) %}
+		{% if messages %}
+			{% for type, msg in messages %}
+				<div class="alert alert-dismissible alert-{{type}} w-25 mx-auto">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<strong>{{msg}}</strong>
+				</div>
+			{% endfor %}
+		{% endif %}
+	{% endwith %}
+
+{% endblock %}
