@@ -96,7 +96,7 @@ def newinstall():
             newAdmin = users("admin", json.dumps(newPassHash), 1)
             db.session.add(newAdmin)
             db.session.commit()
-            with open("app/templates/newinstall.html", "w") as f:
+            with open("/app/templates/newinstall.html", "w") as f:
                 f.write(newPass)
                 f.close()
             return render_template("newinstall.html")
