@@ -24,9 +24,9 @@ uploads_dir = os.path.join(os.getcwd(), "uploads")
 os.makedirs(uploads_dir, exist_ok=True)
 os.makedirs(app.instance_path, exist_ok=True)
 
-if __name__ == "__main__":
-    db.init_app(app)
-    with app.app_context():
-        db.create_all()
+db.init_app(app)
+with app.app_context():
+    db.create_all()
 
+if __name__ == "__main__":
     app.run(debug=True)
