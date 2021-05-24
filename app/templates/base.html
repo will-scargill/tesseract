@@ -4,7 +4,17 @@
 	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 	<link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-rCA2D+D9QXuP2TomtQwd+uP50EHjpafN+wruul0sXZzX/Da7Txn4tB9aLMZV4DZm" crossorigin="anonymous">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/tables.css')}}">
-
+	<style>
+		.footer {
+		  position: fixed;
+		  left: 0;
+		  bottom: 0;
+		  width: 100%;
+		  background-color: #303030;
+		  color: white;
+		  text-align: center;
+		}
+	</style>
 
 	<title> {% block title %}{% endblock %} </title>
 
@@ -59,6 +69,11 @@
 	<div class="container-fluid text-center">
 	{% block content %}
 	{% endblock %}
+	</div>
+	
+	<div class="footer">
+		<br>
+		<p> Tesseract - <a href="https://github.com/will-scargill/tesseract">Github</a></p>
 	</div>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
