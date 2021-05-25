@@ -29,6 +29,9 @@
 				      				<a href="/admin/accounts/delete/{{user._id}}" class="btn btn-primary" role="button" aria-pressed="true">Delete user</a>
 									<a href="/admin/accounts/change/{{user._id}}" class="btn btn-primary" role="button" aria-pressed="true">Change password</a>
 				      			{% endif %}
+								{% if session["user"] == user.name %}
+									<a href="/admin/accounts/change/{{user._id}}" class="btn btn-primary" role="button" aria-pressed="true">Change password</a>
+								{% endif %}
 				      		</td>
 				    	</tr>
 					{% endfor %}
