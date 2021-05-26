@@ -74,16 +74,18 @@ def public(iden):
             md5_hash.update(content)
         checksum = md5_hash.hexdigest()
 
-        return render_template("publicfile.html", filename=fileToDown.filename+fileToDown.extension, uploader=fileToDown.uploader, datetime=fileToDown.datetime, checksum=checksum, fileid=fileToDown._id)
+        return render_template("publicfile.html", filename=fileToDown.filename + fileToDown.extension, uploader=fileToDown.uploader, datetime=fileToDown.datetime, checksum=checksum, fileid=fileToDown._id)
     except FileNotFoundError:
         flash("File no longer exists", "warning")
         return render_template("notfound.html")
+
 
 @misc.route("/pubdown/<fileid>", methods=["GET"])
 def publicdownload(fileid):
     """ Path for actual file download """
     fileToDown = files.query.filter_by(_id=fileid).first()
     return send_file(fileToDown.path, as_attachment=True)
+
 
 @misc.route("/logout")
 def logout():
