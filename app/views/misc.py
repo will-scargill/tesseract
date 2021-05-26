@@ -3,6 +3,7 @@ import os
 import json
 import random
 import string
+import hashlib
 from flask import Blueprint, redirect, url_for, render_template, request, session, flash, send_file
 from argon2 import PasswordHasher
 
@@ -67,11 +68,22 @@ def public(iden):
     else:
         fileToDown = files.query.filter_by(_id=idFromIden.fileid).first()
     try:
-        return send_file(fileToDown.path, as_attachment=True)
+        md5_hash = hashlib.md5()
+        with open(fileToDown.path, "rb") as fileObj:
+            content = fileObj.read()
+            md5_hash.update(content)
+        checksum = md5_hash.hexdigest()
+
+        return render_template("publicfile.html", filename=fileToDown.filename+fileToDown.extension, uploader=fileToDown.uploader, datetime=fileToDown.datetime, checksum=checksum, fileid=fileToDown._id)
     except FileNotFoundError:
         flash("File no longer exists", "warning")
         return render_template("notfound.html")
 
+@misc.route("/pubdown/<fileid>", methods=["GET"])
+def publicdownload(fileid):
+    """ Path for actual file download """
+    fileToDown = files.query.filter_by(_id=fileid).first()
+    return send_file(fileToDown.path, as_attachment=True)
 
 @misc.route("/logout")
 def logout():

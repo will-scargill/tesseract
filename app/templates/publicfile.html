@@ -1,0 +1,24 @@
+<html>
+    <head>
+        <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/darkly/bootstrap.min.css" rel="stylesheet" integrity="sha384-rCA2D+D9QXuP2TomtQwd+uP50EHjpafN+wruul0sXZzX/Da7Txn4tB9aLMZV4DZm" crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ url_for("static", filename="css/style.css")}}">
+    </html>
+    <body>
+        <div style="display: flex; justify-content: center; margin: 10px 10px 10px 10px;">
+            <div class="jumbotron jumbotron-fluid text-center">
+                <div class="container">
+                  <h2 >tesseract public download</h2>
+                  <p class="lead">Filename: {{filename}}</p>
+                  <p class="lead">Uploader: {{uploader}}</p>
+                  <p class="lead">Uploaded on: {{datetime}}</p>
+                  <p class="lead">MD5 Checksum: {{checksum}}</p>
+                  <br>
+                  <a href="/pubdown/{{fileid}}" style="justify-content: center;" class="btn btn-primary" role="button" aria-pressed="true">Download</a>
+                </div>
+            </div>
+        </div>
+    
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    </body>
+</html>
