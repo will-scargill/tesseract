@@ -4,7 +4,10 @@ import string
 import os
 from werkzeug.exceptions import BadRequestKeyError
 
+from db import db
+
 from models.publiclinks import publiclinks
+from models.logs import logs
 
 
 def verifyRequestData(request, data):
@@ -45,3 +48,10 @@ def newInstallCheck():
         with open("instance/lock.txt", "w") as f:
             f.write(";)")
             f.close()
+
+
+def logAction(user, ip, action):
+    """ Log a user's action in the database """
+    newLog = logs(user, ip, action)
+    db.session.add(newLog)
+    db.session.commit()

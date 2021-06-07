@@ -77,6 +77,9 @@ def upload():
             db.session.add(fileObj)
             db.session.commit()
 
+            ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+            util.logAction(session["user"], ip, "Uploaded file - " + filename + fileext)
+
             flash("File uploaded successfully", "info")
             return redirect(url_for("uploads.upload"))
         else:
@@ -146,8 +149,13 @@ def delete(fileid):
                 os.remove(fileToDel.path)
             except FileNotFoundError:
                 pass
+            filename = fileToDel.filename
+            extension = fileToDel.extension
             fileToDel = files.query.filter_by(_id=fileid).delete()
             db.session.commit()
+
+            ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+            util.logAction(session["user"], ip, "Deleted file - " + filename + extension)
         return redirect(url_for("uploads.allfiles"))
     else:
         return redirect(url_for("misc.login"))
@@ -183,6 +191,9 @@ def getlink(fileid):
         linkObj = publiclinks(fileid, fileToLink.filename, session["user"], linkIden)
         db.session.add(linkObj)
         db.session.commit()
+
+        ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+        util.logAction(session["user"], ip, "Created a public link for file - " + fileToLink.filename + fileToLink.extension)
 
         flash("Link created at public/" + linkIden, "info")
         return redirect(url_for("uploads.allfiles"))

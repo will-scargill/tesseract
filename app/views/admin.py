@@ -3,8 +3,11 @@ import json
 from flask import Blueprint, redirect, url_for, render_template, request, session, flash
 from argon2 import PasswordHasher
 
+from modules import util
+
 from models.users import users
 from models.publiclinks import publiclinks
+from models.logs import logs
 
 from db import db
 
@@ -34,6 +37,9 @@ def adminAccounts():
 
                 db.session.add(newUser)
                 db.session.commit()
+
+                ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+                util.logAction(session["user"], ip, "[Admin Action] Created user - " + username)
 
                 allUsers = users.query.all()
                 return render_template("accounts.html", allUsers=allUsers)
@@ -88,8 +94,9 @@ def adminLogs():
     if "user" in session:
         found_users = users.query.filter_by(name=session["user"]).first()
         if found_users.admin is True:
+            allLogs = logs.query.all()
 
-            return render_template("logs.html")
+            return render_template("logs.html", allLogs=allLogs)
         else:
             flash("You are not authorised", "warning")
             ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
@@ -116,6 +123,9 @@ def toggleAdmin(userid):
                     foundUser.admin = 1
                 db.session.commit()
 
+                ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+                util.logAction(session["user"], ip, "[Admin Action] Toggled admin for user - " + foundUser.name)
+
             allUsers = users.query.all()
 
             return render_template("accounts.html", allUsers=allUsers)
@@ -139,8 +149,12 @@ def deleteUser(userid):
             elif foundUser.admin:
                 flash("You cannot delete this user", "warning")
             else:
+                name = foundUser.name
                 users.query.filter_by(_id=userid).delete()
                 db.session.commit()
+
+                ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+                util.logAction(session["user"], ip, "[Admin Action] Deleted user - " + name)
 
             allUsers = users.query.all()
 
@@ -163,8 +177,13 @@ def deleteLink(linkid):
             if foundLink is None:
                 flash("Link not found", "danger")
             else:
+                identifier = foundLink.identifier
+                filename = foundLink.filename
                 publiclinks.query.filter_by(_id=linkid).delete()
                 db.session.commit()
+
+                ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+                util.logAction(session["user"], ip, "[Admin Action] Deleted public link (" + identifier + ") for file - " + filename)
 
             allLinks = publiclinks.query.all()
 
@@ -191,6 +210,10 @@ def changePassword(userid):
                     foundUser.password = json.dumps(newPassHash)
 
                     db.session.commit()
+
+                    ip = request.environ.get('HTTP_X_REAL_IP', request.remote_addr)
+                    util.logAction(session["user"], ip, "[Admin Action] Changed password for user - " + foundUser.name)
+
                     flash("Password change successful", "info")
                     return redirect(url_for("admin.adminAccounts"))
                 else:

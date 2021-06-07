@@ -11,7 +11,16 @@ from db import db
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + app.instance_path + "///db.sqlite3"
+dbType = os.environ.get("TESSERACT_DB_TYPE")
+print(dbType)
+if dbType is None or dbType == "sqlite":
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + app.instance_path + "///db.sqlite3"
+elif dbType == "mysql":
+    dbUser = os.environ.get("MYSQL_USER")
+    dbHost = os.environ.get("MYSQL_HOST")
+    dbPass = os.environ.get("MYSQL_PASS")
+    dbName = os.environ.get("MYSQL_DB_NAME")
+    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql+pymysql://{0}:{1}@{2}/{3}".format(dbUser, dbPass, dbHost, dbName)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.permanent_session_lifetime = timedelta(minutes=2)
 

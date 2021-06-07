@@ -7,7 +7,7 @@
 <form action="/upload" method="post" enctype="multipart/form-data">
 
 	<div class="form-group container-fluid text-center">
-	    <input class="form-control-file" style="text-align-last: center;" type="file" name="inputFile"/>
+	    <input id="fileInput" class="form-control-file" style="text-align-last: center;" type="file" name="inputFile"/>
   	</div>
   	<div class="form-group w-25 container-fluid text-center">
   		<!--
@@ -42,9 +42,16 @@
 	    <small id="keywordHelp" class="form-text text-muted">Seperate keywords by space</small>
   	</div>
   	<div class="form-group">
-	   <input type="submit" class="btn btn-primary" value="submit" />
+	   <input id="submitButton" type="submit" class="btn btn-primary" value="submit" />
   	</div>
+	<div id="progressBar" style="display: none;" class="progress">
+		<div class="bar" style="height: 250px;"></div >
+		<div class="percent">0%</div >
+	</div>
 </form>
+
+
+<br> 
 {% with messages = get_flashed_messages(with_categories=true) %}
 	{% if messages %}
 		{% for type, msg in messages %}
@@ -58,20 +65,49 @@
 {% endblock %}
 
 {% block pagescripts %}
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js" integrity="sha384-qlmct0AOBiA2VPZkMY3+2WqkHtIQ9lSdAsAn5RUJD/3vA5MKDgSGcdmIv4ycVxyn" crossorigin="anonymous"></script>
+
 	<script>
 	    	$(document).ready(function(){
-	        $("#chkEncrypted").on("input",function(e){
-	            $("#encryptedDisplay").toggle()
-	        });
-	        $("#chkGlobal").on("input",function(e){
-	            $("#globalDisplay").toggle()
-	        });
-	        $("#chkShared").on("input",function(e){
-	            $("#sharedDisplay").toggle()
-	        });
-	        $("#chkRestricted").on("input",function(e){
-	            $("#restrictedDisplay").toggle()
-	        });
-	    });
+				$("#chkEncrypted").on("input",function(e){
+					$("#encryptedDisplay").toggle()
+				});
+				$("#chkGlobal").on("input",function(e){
+					$("#globalDisplay").toggle()
+				});
+				$("#chkShared").on("input",function(e){
+					$("#sharedDisplay").toggle()
+				});
+				$("#chkRestricted").on("input",function(e){
+					$("#restrictedDisplay").toggle()
+				});
+				$("#chkRestricted").on("input",function(e){
+					$("#restrictedDisplay").toggle()
+				});
+				$('input[type=file]').change(function() { 
+					$("#submitButton").val("submit");
+				});
+			});
+			
+			$(function() {
+				var bar = $('.bar');
+				var percent = $('.percent');
+
+				$('form').ajaxForm({
+					beforeSend: function() {
+						var percentVal = '0%';
+						$("#submitButton").val("Uploading - " + percentVal);
+					},
+					uploadProgress: function(event, position, total, percentComplete) {
+						var percentVal = percentComplete + '%';
+						$("#submitButton").val("Uploading - " + percentVal);
+					},
+					complete: function(xhr) {	
+						$("#submitButton").val("Upload complete");
+					}
+				});
+			});
+			
 	</script>
 {% endblock %}
