@@ -22,6 +22,7 @@ def upload():
         if request.method == "POST":
             uploadSuccessful = True
             file = request.files["inputFile"]
+            print(type(file))
             keywords = request.form["keywords"]
 
             if request.files['inputFile'].filename == '':
@@ -64,12 +65,14 @@ def upload():
             if not os.path.exists(userUploadDir):
                 os.makedirs(userUploadDir)
 
-            filepath = os.path.join(userUploadDir, secure_filename(file.filename))
+            newFilename = util.getSafeFilename(file.filename, session["user"])
 
+            filepath = os.path.join(userUploadDir, secure_filename(newFilename))
+            print(filepath)
             file.save(filepath)
 
-            filename = os.path.splitext(file.filename)[0]
-            fileext = os.path.splitext(file.filename)[1]
+            filename = os.path.splitext(newFilename)[0]
+            fileext = os.path.splitext(newFilename)[1]
             flagstr = util.getFlagString(flagGlobal, flagShared, flagRestricted)
 
             fileObj = files(filename, fileext, filepath, session["user"], flagstr, keywords, 0, flagGlobal, globalAddresses, flagShared, sharedUsers, flagRestricted, allowedIPs)

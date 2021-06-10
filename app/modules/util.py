@@ -8,6 +8,7 @@ from db import db
 
 from models.publiclinks import publiclinks
 from models.logs import logs
+from models.files import files
 
 
 def verifyRequestData(request, data):
@@ -55,3 +56,15 @@ def logAction(user, ip, action):
     newLog = logs(user, ip, action)
     db.session.add(newLog)
     db.session.commit()
+
+
+def getSafeFilename(filename, user):
+    """ Check a filename does not already exist """
+    found_files = files.query.filter_by(uploader=user).all()
+    ext = os.path.splitext(filename)[1]
+    filename = os.path.splitext(filename)[0]
+    for file in found_files:
+        if file.filename == filename:
+            filename = filename + "_1"
+    filename = filename + ext
+    return filename

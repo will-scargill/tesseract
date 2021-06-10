@@ -14,6 +14,27 @@
 		  color: white;
 		  text-align: center;
 		}
+
+		.footer_asd {
+			height: 50px;
+			margin-top: -50px;
+		}
+
+		.content {
+			min-height: 100%;
+		}
+		.content-inside {
+			padding: 20px;
+			padding-bottom: 50px;
+		}
+		footer {
+			height: 50px;
+			margin-top: -50px;
+			background: #303030;
+			color: white;
+			line-height: 50px;
+			padding: 0 20px;
+		}
 	</style>
 
 	<title> {% block title %}{% endblock %} </title>
@@ -66,15 +87,16 @@
 			</ul>
 	  	</div>
 	</nav>
-	<div class="container-fluid text-center">
-	{% block content %}
-	{% endblock %}
+	<div class="content">
+		<div class="content-inside container-fluid text-center">
+			{% block content %}
+			{% endblock %}
+		</div>
 	</div>
-	
-	<div class="footer">
-		<br>
-		<p> Tesseract - <a href="https://github.com/will-scargill/tesseract">Github</a> - <a href="https://hub.docker.com/r/willscargill/tesseract">Docker Hub</a> - v2.0</p>
-	</div>
+	<br>
+	<footer class="footer">
+		<p> Tesseract - <a href="https://github.com/will-scargill/tesseract">Github</a> - <a href="https://hub.docker.com/r/willscargill/tesseract">Docker Hub</a> - v2.2</p>
+	</footer>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>

@@ -12,7 +12,6 @@ from db import db
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
 dbType = os.environ.get("TESSERACT_DB_TYPE")
-print(dbType)
 if dbType is None or dbType == "sqlite":
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + app.instance_path + "///db.sqlite3"
 elif dbType == "mysql":
