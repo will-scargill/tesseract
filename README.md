@@ -38,7 +38,7 @@
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To get an instnace up and running follow these steps.
+To get an instance up and running follow these steps.
 Recommended deployment method is via docker compose.
 
 ### Prerequisites
@@ -84,7 +84,12 @@ Recommended deployment method is via docker compose.
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-TBA
+To get the default admin password go to `https://[your_tesseract_instance]/newinstall`
+This password can be used to log in to the `admin` account. From here you can create new users.
+The newinstall page should be inaccessible after the first time `admin` logs in, so make sure you note down the password.
+It is also recommended that you change the password.
+
+More usage information TBA
 
 <!-- LICENSE -->
 ## License
