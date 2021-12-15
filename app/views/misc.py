@@ -20,6 +20,7 @@ ph = PasswordHasher()
 misc = Blueprint("misc", __name__)
 
 
+
 @misc.route("/", methods=["POST", "GET"])
 def login():
     """ Login route """
@@ -73,7 +74,6 @@ def public(iden):
             content = fileObj.read()
             md5_hash.update(content)
         checksum = md5_hash.hexdigest()
-
         return render_template("publicfile.html", filename=fileToDown.filename + fileToDown.extension, uploader=fileToDown.uploader, datetime=fileToDown.datetime, checksum=checksum, fileid=fileToDown._id)
     except FileNotFoundError:
         flash("File no longer exists", "warning")
@@ -83,8 +83,13 @@ def public(iden):
 @misc.route("/pubdown/<fileid>", methods=["GET"])
 def publicdownload(fileid):
     """ Path for actual file download """
-    fileToDown = files.query.filter_by(_id=fileid).first()
-    return send_file(fileToDown.path, as_attachment=True)
+    idenFromID = publiclinks.query.filter_by(fileid=fileid).first()
+    if not idenFromID: 
+        flash("Link does not correspond to a file", "warning")
+        return render_template("notfound.html")
+    else:
+        fileToDown = files.query.filter_by(_id=fileid).first()
+        return send_file(fileToDown.path, as_attachment=True)
 
 
 @misc.route("/logout")
