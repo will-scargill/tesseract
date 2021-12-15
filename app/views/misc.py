@@ -20,7 +20,6 @@ ph = PasswordHasher()
 misc = Blueprint("misc", __name__)
 
 
-
 @misc.route("/", methods=["POST", "GET"])
 def login():
     """ Login route """
@@ -84,7 +83,7 @@ def public(iden):
 def publicdownload(fileid):
     """ Path for actual file download """
     idenFromID = publiclinks.query.filter_by(fileid=fileid).first()
-    if not idenFromID: 
+    if not idenFromID:
         flash("Link does not correspond to a file", "warning")
         return render_template("notfound.html")
     else:
