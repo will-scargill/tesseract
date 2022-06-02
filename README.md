@@ -64,8 +64,8 @@ Recommended deployment method is via docker compose.
         ports:
             - 7000:80
         volumes:
-          - data:/instance
-          - data:/uploads
+          - data:/app/instance
+          - data:/app/uploads
     volumes:
         data:
    ```
